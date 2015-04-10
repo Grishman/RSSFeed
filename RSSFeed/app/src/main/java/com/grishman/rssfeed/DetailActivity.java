@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.webkit.WebView;
 
 
 public class DetailActivity extends ActionBarActivity {
@@ -60,6 +61,13 @@ public class DetailActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            WebView myWebView = (WebView) rootView.findViewById(R.id.webview);
+            Bundle extras = getActivity().getIntent().getExtras();
+            String urlFromIntent="http://google.com";
+            if (extras != null) {
+                urlFromIntent = extras.getString("URL");
+            }
+            myWebView.loadUrl(urlFromIntent);
             return rootView;
         }
     }
