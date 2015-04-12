@@ -4,9 +4,7 @@
 
     <!--Permissions-->
     <uses-permission android:name="android.permission.INTERNET" />
-    <provider
-        android:name=".data.RSSFeedProvider"
-        android:authorities="@string/content_authority" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -29,6 +27,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.grishman.rssfeed.MainActivity" />
         </activity>
+        <provider
+            android:name="com.grishman.rssfeed.data.RSSFeedProvider"
+            android:authorities="@string/content_authority" />
     </application>
 
 </manifest>
