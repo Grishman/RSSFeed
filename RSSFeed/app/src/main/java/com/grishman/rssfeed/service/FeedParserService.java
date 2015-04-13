@@ -58,7 +58,7 @@ public class FeedParserService extends IntentService {
         } catch (ParserConfigurationException e) {
             Log.e("RSS Handler Parser Config", e.toString());
         }
-
+// TODO refactor this sht
         ContentValues cv = new ContentValues();
         for (RSSFeedItem item : articleList2 = rssHandler.getArticleList()) {
             Log.d(TAG, item.getImgLink());
