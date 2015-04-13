@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.grishman.rssfeed.R;
 
@@ -26,10 +27,20 @@ public class DetailWebViewFragment extends Fragment {
         Bundle extras = getActivity().getIntent().getExtras();
         String urlFromIntent="http://stackoverflow.com/questions/16558357/uncaught-typeerror-when-calling-a-javascript-function-in-android";
         if (extras != null) {
-//            urlFromIntent = extras.getString("URL");
+            urlFromIntent = extras.getString("URL");
         }
         myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.setWebViewClient(new FeedWebViewClient());
         myWebView.loadUrl(urlFromIntent);
         return rootView;
+    }
+    private class FeedWebViewClient extends WebViewClient
+    {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url)
+        {
+            view.loadUrl(url);
+            return true;
+        }
     }
 }
