@@ -1,6 +1,7 @@
 package com.grishman.rssfeed;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 
 import com.grishman.rssfeed.data.RSSFeedContract;
 import com.grishman.rssfeed.fragments.FeedFragment;
+import com.grishman.rssfeed.service.FeedParserService;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -25,11 +27,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void fakeData() {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_TITLE, "Test2 title2");
-        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_DESCRIPTION, "TDescription2222");
-        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_LINK, "http://abcnews.go.com/US/tiny-illinois-town-slammed-deadly-tornado/story?id=30217421");
-        getApplicationContext().getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI, initialValues);
+//        ContentValues initialValues = new ContentValues();
+//        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_TITLE, "Test2 title2");
+//        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_DESCRIPTION, "TDescription2222");
+//        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_LINK, "http://abcnews.go.com/US/tiny-illinois-town-slammed-deadly-tornado/story?id=30217421");
+        getApplicationContext().getContentResolver().delete(RSSFeedContract.FeedsEntry.CONTENT_URI, null, null);
 
     }
     @Override
@@ -49,6 +51,11 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.action_refresh) {
+            // Starting the service
+        Intent intent =new Intent(getApplicationContext(), FeedParserService.class);
+        startService(intent);
         }
 
         return super.onOptionsItemSelected(item);

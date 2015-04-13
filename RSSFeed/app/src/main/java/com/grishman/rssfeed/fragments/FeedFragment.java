@@ -35,9 +35,6 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Starting the service
-//        Intent intent =new Intent(getActivity(), FeedParserService.class);
-//        getActivity().startService(intent);
     }
 
     private static final String[] FEED_COLUMNS = {

@@ -1,7 +1,9 @@
 package com.grishman.rssfeed.service;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -69,6 +71,15 @@ public class FeedParserService extends IntentService {
             getApplicationContext().getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI,cv);
         }
 
+    }
+    public static class AlarmReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent sendIntent = new Intent(context, FeedParserService.class);
+            context.startService(sendIntent);
+
+        }
     }
 
 }
