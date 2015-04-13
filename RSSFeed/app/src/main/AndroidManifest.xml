@@ -30,6 +30,7 @@
         <provider
             android:name="com.grishman.rssfeed.data.RSSFeedProvider"
             android:authorities="@string/content_authority" />
+        <service android:name=".service.FeedParserService" />
     </application>
 
 </manifest>

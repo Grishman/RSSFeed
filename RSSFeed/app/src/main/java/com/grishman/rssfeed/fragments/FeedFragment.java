@@ -19,6 +19,7 @@ import com.grishman.rssfeed.DetailActivity;
 import com.grishman.rssfeed.FeedAdapter;
 import com.grishman.rssfeed.R;
 import com.grishman.rssfeed.data.RSSFeedContract;
+import com.grishman.rssfeed.service.FeedParserService;
 
 /**
  * A Feed fragment containing list view for feed list.
@@ -30,6 +31,15 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
 
     public FeedFragment() {
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Starting the service
+//        Intent intent =new Intent(getActivity(), FeedParserService.class);
+//        getActivity().startService(intent);
+    }
+
     private static final String[] FEED_COLUMNS = {
             // In this case the id needs to be fully qualified with a table name, since
             // the content provider joins the location & weather tables in the background
@@ -72,8 +82,11 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
         mFeedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the cursor, positioned to the corresponding row in the result set
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                String url=cursor.getString(COL_LINK);
                 Intent sendFeedURL = new Intent(getActivity(), DetailActivity.class);
-                sendFeedURL.putExtra("URL", values[position]);
+                sendFeedURL.putExtra("URL", url);
                 startActivity(sendFeedURL);
             }
         });
