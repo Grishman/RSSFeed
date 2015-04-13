@@ -24,10 +24,11 @@ public class DetailWebViewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         WebView myWebView = (WebView) rootView.findViewById(R.id.webview);
         Bundle extras = getActivity().getIntent().getExtras();
-        String urlFromIntent="http://google.com";
+        String urlFromIntent="http://stackoverflow.com/questions/16558357/uncaught-typeerror-when-calling-a-javascript-function-in-android";
         if (extras != null) {
-            urlFromIntent = extras.getString("URL");
+//            urlFromIntent = extras.getString("URL");
         }
+        myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.loadUrl(urlFromIntent);
         return rootView;
     }
