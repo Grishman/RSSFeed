@@ -94,6 +94,9 @@ public class MainActivity extends ActionBarActivity {
             // Start schedule alarm to trigger once a day
             setRecurringAlarm(getApplicationContext());
         }
+        if (id == R.id.action_delete) {
+            fakeData();
+        }
 
         return super.onOptionsItemSelected(item);
     }

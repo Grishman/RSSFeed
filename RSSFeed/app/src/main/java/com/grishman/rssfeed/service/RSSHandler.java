@@ -1,6 +1,11 @@
 package com.grishman.rssfeed.service;
 
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
 import android.util.Log;
+
+import com.grishman.rssfeed.data.RSSFeedContract;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -63,6 +68,7 @@ public class RSSHandler extends DefaultHandler {
 
             articleList.add(currentArticle);
 
+
             currentArticle = new RSSFeedItem();
 
 //            // Lets check if we've hit our limit on number of articles
@@ -78,4 +84,16 @@ public class RSSHandler extends DefaultHandler {
     public void characters(char[] ch, int start, int length) throws SAXException {
         chars.append(new String(ch, start, length));
     }
+//    Context mCont = new Activity().getApplication().getApplicationContext();
+//    public void saveToDB(RSSFeedItem item){
+//        ContentValues cv = new ContentValues();
+////            Log.d(TAG, item.getImgLink());
+//            cv.put("title",item.getTitle());
+//            cv.put("description",item.getDescription());
+//            cv.put("link",item.getLink());
+//            cv.put("img_url",item.getImgLink());
+//            cv.put("category",item.getCategory());
+//            cv.put("pub_date",item.getPubDate());
+//            mCont.getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI,cv);
+//    }
 }
