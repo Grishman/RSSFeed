@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.grishman.rssfeed.R;
 
@@ -29,7 +30,17 @@ public class DetailWebViewFragment extends Fragment {
             urlFromIntent = extras.getString("URL");
         }
         myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.setWebViewClient(new FeedWebViewClient());
         myWebView.loadUrl(urlFromIntent);
         return rootView;
+    }
+    private class FeedWebViewClient extends WebViewClient
+    {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url)
+        {
+            view.loadUrl(url);
+            return true;
+        }
     }
 }
