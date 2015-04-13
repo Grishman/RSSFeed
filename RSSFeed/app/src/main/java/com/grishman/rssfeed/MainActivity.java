@@ -1,15 +1,13 @@
 package com.grishman.rssfeed;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.content.ContentValues;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+
+import com.grishman.rssfeed.data.RSSFeedContract;
+import com.grishman.rssfeed.fragments.FeedFragment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -18,14 +16,22 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        fakeData();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new FeedFragment())
                     .commit();
         }
     }
 
+    private void fakeData() {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_TITLE, "Test2 title2");
+        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_DESCRIPTION, "TDescription2222");
+        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_LINK, "http://abcnews.go.com/US/tiny-illinois-town-slammed-deadly-tornado/story?id=30217421");
+        getApplicationContext().getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI, initialValues);
 
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -48,19 +54,4 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
-            return rootView;
-        }
-    }
 }
