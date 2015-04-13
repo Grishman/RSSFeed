@@ -16,7 +16,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fakeData();
+//        fakeData();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new FeedFragment())
@@ -26,8 +26,8 @@ public class MainActivity extends ActionBarActivity {
 
     private void fakeData() {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_TITLE, "Test1 title");
-        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_DESCRIPTION, "TDescription");
+        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_TITLE, "Test2 title2");
+        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_DESCRIPTION, "TDescription2222");
         initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_LINK, "http://abcnews.go.com/US/tiny-illinois-town-slammed-deadly-tornado/story?id=30217421");
         getApplicationContext().getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI, initialValues);
 
