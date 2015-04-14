@@ -1,12 +1,18 @@
 package com.grishman.rssfeed.service;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.grishman.rssfeed.MainActivity;
+import com.grishman.rssfeed.R;
 import com.grishman.rssfeed.data.RSSFeedContract;
 
 import org.xml.sax.InputSource;
@@ -31,6 +37,45 @@ public class FeedParserService extends IntentService {
 
     public FeedParserService() {
         super("FeedService");
+    }
+    private int numMessages=0;
+    private int notificationID=100;
+    private NotificationManager mNotificationManager;
+    public  void sendUpdateNotify(){
+        Log.i("Start", "notification");
+
+      /* Invoking the default notification service */
+        NotificationCompat.Builder  mBuilder =
+                new NotificationCompat.Builder(getApplicationContext());
+
+        mBuilder.setContentTitle("Its working");
+        mBuilder.setContentText("We in alarma!!!.");
+        mBuilder.setTicker("New Message Alert!");
+        mBuilder.setSmallIcon(R.drawable.ic_launcher);
+
+      /* Increase notification number every time a new notification arrives */
+        mBuilder.setNumber(++numMessages);
+
+      /* Creates an explicit intent for an Activity in your app */
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+
+      /* Adds the Intent that starts the Activity to the top of the stack */
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+      /* notificationID allows you to update the notification later on. */
+        mNotificationManager.notify(notificationID, mBuilder.build());
     }
 
     @Override
@@ -70,16 +115,21 @@ public class FeedParserService extends IntentService {
             cv.put("pub_date",item.getPubDate());
             getApplicationContext().getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI,cv);
         }
+        sendUpdateNotify();
 
     }
     public static class AlarmReceiver extends BroadcastReceiver {
+
+
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Intent sendIntent = new Intent(context, FeedParserService.class);
             context.startService(sendIntent);
+//            sendUpdateNotify();
 
         }
+
     }
 
 }

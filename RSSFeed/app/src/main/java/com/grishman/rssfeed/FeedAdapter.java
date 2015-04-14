@@ -48,7 +48,7 @@ public class FeedAdapter extends CursorAdapter {
         String imgUrl = cursor.getString(FeedFragment.COL_IMG);
         Glide.with(context)
                 .load(imgUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(viewHolder.imgView);
         String title = cursor.getString(FeedFragment.COL_TITLE);
         viewHolder.titleView.setText(title);

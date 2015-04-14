@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,6 +33,12 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setRecurringAlarm(getApplication().getApplicationContext());
+    }
+
     private void fakeData() {
 //        ContentValues initialValues = new ContentValues();
 //        initialValues.put(RSSFeedContract.FeedsEntry.COLUMN_TITLE, "Test2 title2");
@@ -42,12 +49,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setRecurringAlarm(Context context) {
+        Log.d("Alarm", "in the alarm");
 
         // let's grab new stuff at around 12:45 GMT, inexactly
         Calendar updateTime = Calendar.getInstance();
         updateTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        updateTime.set(Calendar.HOUR_OF_DAY, 12);
-        updateTime.set(Calendar.MINUTE, 45);
+        updateTime.set(Calendar.HOUR_OF_DAY, 10);
+        updateTime.set(Calendar.MINUTE, 40);
 
         Intent downloader = new Intent(context, FeedParserService.AlarmReceiver.class);
         PendingIntent recurringDownload = PendingIntent.getBroadcast(context,
@@ -56,7 +64,7 @@ public class MainActivity extends ActionBarActivity {
                 Context.ALARM_SERVICE);
         alarms.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                 updateTime.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, recurringDownload);
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES, recurringDownload);
     }
     public boolean isOnline() {
         String cs = Context.CONNECTIVITY_SERVICE;
