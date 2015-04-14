@@ -48,10 +48,11 @@ public class FeedParserService extends IntentService {
         NotificationCompat.Builder  mBuilder =
                 new NotificationCompat.Builder(getApplicationContext());
 
-        mBuilder.setContentTitle("Its working");
-        mBuilder.setContentText("We in alarma!!!.");
+        mBuilder.setContentTitle("Get your fresh RSS!");
+        mBuilder.setContentText("Service complete update feed.");
         mBuilder.setTicker("New Message Alert!");
         mBuilder.setSmallIcon(R.drawable.ic_launcher);
+        mBuilder.setAutoCancel(true);
 
       /* Increase notification number every time a new notification arrives */
         mBuilder.setNumber(++numMessages);
