@@ -15,8 +15,13 @@ public class DetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
+            Bundle arguments = new Bundle();
+            arguments.putString(DetailWebViewFragment.DETAIL_URL, getIntent().getExtras().toString());
+
+            DetailWebViewFragment fragment = new DetailWebViewFragment();
+            fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new DetailWebViewFragment())
+                    .add(R.id.feeds_detail_container, fragment)
                     .commit();
         }
     }

@@ -73,7 +73,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
         final String[] values = new String[]{"http://abcnews.go.com/US/tiny-illinois-town-slammed-deadly-tornado/story?id=30217421", "http://abcnews.go.com/US/south-carolina-police-officers-mom-speaks-tearful-interview/story?id=30207558", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
                 "Linux", "OS/2"};
-         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, values);
         mFeedList.setAdapter(mFeedAdapter);
         mFeedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,19 +81,20 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Get the cursor, positioned to the corresponding row in the result set
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                String url=cursor.getString(COL_LINK);
-                Intent sendFeedURL = new Intent(getActivity(), DetailActivity.class);
-                sendFeedURL.putExtra("URL", url);
-                startActivity(sendFeedURL);
+                String url = cursor.getString(COL_LINK);
+                ((Callback) getActivity())
+                        .onItemSelected(url);
             }
         });
         return rootView;
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         getLoaderManager().initLoader(FEED_LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
     }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(),
@@ -112,5 +113,17 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mFeedAdapter.swapCursor(null);
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(String url);
     }
 }

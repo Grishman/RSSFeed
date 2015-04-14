@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.grishman.rssfeed.data.RSSFeedContract;
+import com.grishman.rssfeed.fragments.DetailWebViewFragment;
 import com.grishman.rssfeed.fragments.FeedFragment;
 import com.grishman.rssfeed.service.FeedParserService;
 
@@ -19,17 +20,38 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements FeedFragment.Callback {
+
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
+    private boolean mTwoPane;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        fakeData();
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new FeedFragment())
-                    .commit();
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.container, new FeedFragment())
+//                    .commit();
+//        }
+        if (findViewById(R.id.feeds_detail_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.feeds_detail_container, new DetailWebViewFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
         }
     }
 
@@ -66,6 +88,7 @@ public class MainActivity extends ActionBarActivity {
                 updateTime.getTimeInMillis(),
                 AlarmManager.INTERVAL_FIFTEEN_MINUTES, recurringDownload);
     }
+
     public boolean isOnline() {
         String cs = Context.CONNECTIVITY_SERVICE;
         ConnectivityManager cm = (ConnectivityManager)
@@ -73,7 +96,7 @@ public class MainActivity extends ActionBarActivity {
         if (cm.getActiveNetworkInfo() == null) {
             return false;
         }
-        return     cm.getActiveNetworkInfo().isConnectedOrConnecting();
+        return cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
 
@@ -107,6 +130,35 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FeedFragment ff = (FeedFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_feeds);
+    }
+
+    @Override
+    public void onItemSelected(String url) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putString(DetailWebViewFragment.DETAIL_URL, url);
+
+            DetailWebViewFragment fragment = new DetailWebViewFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.feeds_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            // TODO need fix this sht
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .putExtra(DetailWebViewFragment.DETAIL_URL,url);
+            startActivity(intent);
+        }
     }
 
 }
