@@ -51,7 +51,7 @@ public class FeedParserService extends IntentService {
         mBuilder.setContentTitle("Get your fresh RSS!");
         mBuilder.setContentText("Service complete update feed.");
         mBuilder.setTicker("New Message Alert!");
-        mBuilder.setSmallIcon(R.drawable.ic_launcher);
+        mBuilder.setSmallIcon(R.drawable.ic_noti_rss);
         mBuilder.setAutoCancel(true);
 
       /* Increase notification number every time a new notification arrives */
@@ -104,7 +104,10 @@ public class FeedParserService extends IntentService {
         } catch (ParserConfigurationException e) {
             Log.e("RSS Handler Parser Config", e.toString());
         }
+        // Delete feeds
+        getApplicationContext().getContentResolver().delete(RSSFeedContract.FeedsEntry.CONTENT_URI, null, null);
 // TODO refactor this sht
+        // Insert new feeds
         ContentValues cv = new ContentValues();
         for (RSSFeedItem item : articleList2 = rssHandler.getArticleList()) {
             Log.d(TAG, item.getImgLink());
@@ -116,6 +119,7 @@ public class FeedParserService extends IntentService {
             cv.put("pub_date",item.getPubDate());
             getApplicationContext().getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI,cv);
         }
+        // Notify
         sendUpdateNotify();
 
     }

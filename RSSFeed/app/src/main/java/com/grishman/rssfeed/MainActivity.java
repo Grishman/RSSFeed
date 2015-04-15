@@ -58,6 +58,7 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
     @Override
     protected void onStart() {
         super.onStart();
+        // Start schedule alarm to trigger once a day
         setRecurringAlarm(getApplication().getApplicationContext());
     }
 
@@ -123,7 +124,7 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
             Intent intent = new Intent(getApplicationContext(), FeedParserService.class);
             startService(intent);
             // Start schedule alarm to trigger once a day
-            setRecurringAlarm(getApplicationContext());
+//            setRecurringAlarm(getApplicationContext());
         }
         if (id == R.id.action_delete) {
             fakeData();
@@ -156,7 +157,7 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
         } else {
             // TODO need fix this sht
             Intent intent = new Intent(this, DetailActivity.class)
-                    .putExtra(DetailWebViewFragment.DETAIL_URL,url);
+                    .putExtra(DetailWebViewFragment.DETAIL_URL, url);
             startActivity(intent);
         }
     }

@@ -70,11 +70,6 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
         mFeedAdapter = new FeedAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
         final ListView mFeedList = (ListView) rootView.findViewById(R.id.list_feed);
-        final String[] values = new String[]{"http://abcnews.go.com/US/tiny-illinois-town-slammed-deadly-tornado/story?id=30217421", "http://abcnews.go.com/US/south-carolina-police-officers-mom-speaks-tearful-interview/story?id=30207558", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, values);
         mFeedList.setAdapter(mFeedAdapter);
         mFeedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

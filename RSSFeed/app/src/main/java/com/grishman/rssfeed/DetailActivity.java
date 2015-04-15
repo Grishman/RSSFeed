@@ -16,7 +16,7 @@ public class DetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
-            arguments.putString(DetailWebViewFragment.DETAIL_URL, getIntent().getExtras().toString());
+            arguments.putString(DetailWebViewFragment.DETAIL_URL, getIntent().getExtras().getString(DetailWebViewFragment.DETAIL_URL));
 
             DetailWebViewFragment fragment = new DetailWebViewFragment();
             fragment.setArguments(arguments);
