@@ -90,6 +90,7 @@ public class RSSFeedSyncAdapter extends AbstractThreadedSyncAdapter {
             cv.put("img_url", item.getImgLink());
             cv.put("category", item.getCategory());
             cv.put("pub_date", item.getPubDate());
+
             getContext().getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI, cv);
         }
         // Notify user about new feeds

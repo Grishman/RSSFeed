@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,10 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
         } else {
             mTwoPane = false;
         }
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setDisplayUseLogoEnabled(true);
+//        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+//        getSupportActionBar().setIcon(R.drawable.ic_launcher);
         RSSFeedSyncAdapter.initializeSyncAdapter(getApplicationContext());
     }
 

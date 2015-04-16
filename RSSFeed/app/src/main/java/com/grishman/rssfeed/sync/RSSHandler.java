@@ -63,7 +63,6 @@ public class RSSHandler extends DefaultHandler {
 
             articleList.add(currentArticle);
 
-
             currentArticle = new RSSFeedItem();
 
 //            // Lets check if we've hit our limit on number of articles
