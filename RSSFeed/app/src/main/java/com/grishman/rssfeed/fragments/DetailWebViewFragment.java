@@ -34,7 +34,10 @@ public class DetailWebViewFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        detailWebView.restoreState(savedInstanceState);
+        if (webViewBundle == null) {
+            detailWebView.restoreState(webViewBundle);
+        }
+//        detailWebView.restoreState(savedInstanceState);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
