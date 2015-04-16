@@ -91,6 +91,12 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(FEED_LOADER_ID,null,this);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(),
                 RSSFeedContract.FeedsEntry.CONTENT_URI,

@@ -19,10 +19,10 @@ public class RSSFeedDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String SQL_CREATE_RSSFEED_TABLE = new StringBuilder().append("CREATE TABLE ").append(FeedsEntry.TABLE_NAME)
                 .append(" (").append(FeedsEntry._ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT,")
-                .append(FeedsEntry.COLUMN_TITLE).append(" TEXT, ")
-                .append(FeedsEntry.COLUMN_DESCRIPTION).append(" TEXT, ")
-                .append(FeedsEntry.COLUMN_LINK).append(" TEXT,")
-                .append(FeedsEntry.COLUMN_IMG).append(" TEXT, ")
+                .append(FeedsEntry.COLUMN_TITLE).append(" TEXT NOT NULL, ")
+                .append(FeedsEntry.COLUMN_DESCRIPTION).append(" TEXT NOT NULL, ")
+                .append(FeedsEntry.COLUMN_LINK).append(" TEXT NOT NULL,")
+                .append(FeedsEntry.COLUMN_IMG).append(" TEXT NOT NULL, ")
                 .append(FeedsEntry.COLUMN_CATEGORY).append(" TEXT, ")
                 .append(FeedsEntry.COLUMN_PUBDATE).append(" TEXT ")
                 .append(");").toString();
