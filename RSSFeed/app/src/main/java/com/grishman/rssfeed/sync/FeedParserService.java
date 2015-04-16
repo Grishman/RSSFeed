@@ -1,4 +1,4 @@
-package com.grishman.rssfeed.service;
+package com.grishman.rssfeed.sync;
 
 import android.app.IntentService;
 import android.app.NotificationManager;

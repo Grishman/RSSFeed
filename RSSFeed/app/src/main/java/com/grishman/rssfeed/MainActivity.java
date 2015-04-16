@@ -1,23 +1,18 @@
 package com.grishman.rssfeed;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.grishman.rssfeed.data.RSSFeedContract;
 import com.grishman.rssfeed.fragments.DetailWebViewFragment;
 import com.grishman.rssfeed.fragments.FeedFragment;
-import com.grishman.rssfeed.service.FeedParserService;
-
-import java.util.Calendar;
-import java.util.TimeZone;
+import com.grishman.rssfeed.sync.FeedParserService;
+import com.grishman.rssfeed.sync.RSSFeedSyncAdapter;
 
 
 public class MainActivity extends ActionBarActivity implements FeedFragment.Callback {
@@ -121,8 +116,9 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
         }
         if (id == R.id.action_refresh) {
             // Starting the service
-            Intent intent = new Intent(getApplicationContext(), FeedParserService.class);
-            startService(intent);
+//            Intent intent = new Intent(getApplicationContext(), FeedParserService.class);
+//            startService(intent);
+            RSSFeedSyncAdapter.syncImmediately(this);
             // Start schedule alarm to trigger once a day
 //            setRecurringAlarm(getApplicationContext());
         }

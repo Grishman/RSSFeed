@@ -1,4 +1,4 @@
-package com.grishman.rssfeed.service;
+package com.grishman.rssfeed.sync;
 
  class RSSFeedItem {
      private long articleId;

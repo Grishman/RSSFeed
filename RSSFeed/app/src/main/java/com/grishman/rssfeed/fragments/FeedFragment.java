@@ -21,7 +21,7 @@ import android.widget.ListView;
 import com.grishman.rssfeed.FeedAdapter;
 import com.grishman.rssfeed.R;
 import com.grishman.rssfeed.data.RSSFeedContract;
-import com.grishman.rssfeed.service.FeedParserService;
+import com.grishman.rssfeed.sync.FeedParserService;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -107,7 +107,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
                         .onItemSelected(url);
             }
         });
-        setRecurringAlarm(getActivity());
+//        setRecurringAlarm(getActivity());
         return rootView;
     }
 

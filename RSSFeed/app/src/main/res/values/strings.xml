@@ -8,5 +8,7 @@
     <string name="content_authority">com.grishman.rssfeed</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_delete">Delete</string>
-
+        <!-- Account type (for sync-adapter authenticator) -->
+        <!-- SyncAdapter related -->
+    <string name="sync_account_type">rssfeed.grishman.com</string>
 </resources>
