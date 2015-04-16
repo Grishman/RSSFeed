@@ -1,9 +1,5 @@
 package com.grishman.rssfeed.fragments;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +16,6 @@ import android.widget.ListView;
 import com.grishman.rssfeed.FeedAdapter;
 import com.grishman.rssfeed.R;
 import com.grishman.rssfeed.data.RSSFeedContract;
-import com.grishman.rssfeed.service.FeedParserService;
-
-import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * A Feed fragment containing list view for feed list.
@@ -33,6 +24,9 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private static final int FEED_LOADER_ID = 1;
     private FeedAdapter mFeedAdapter = null;
+    private ListView mFeedList;
+    private int mPosition = ListView.INVALID_POSITION;
+    private static final String SELECTED_KEY = "selected_position";
 
     public FeedFragment() {
     }
@@ -42,25 +36,6 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-    }
-
-    private void setRecurringAlarm(Context context) {
-        Log.d("Alarm", "in the alarm");
-
-        // let's grab new stuff at around 12:45 GMT, inexactly
-        Calendar updateTime = Calendar.getInstance();
-        updateTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        updateTime.set(Calendar.HOUR_OF_DAY, 10);
-        updateTime.set(Calendar.MINUTE, 40);
-
-        Intent downloader = new Intent(context, FeedParserService.AlarmReceiver.class);
-        PendingIntent recurringDownload = PendingIntent.getBroadcast(context,
-                0, downloader, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager alarms = (AlarmManager) getActivity().getSystemService(
-                Context.ALARM_SERVICE);
-        alarms.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                updateTime.getTimeInMillis(),
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, recurringDownload);
     }
 
     private static final String[] FEED_COLUMNS = {
@@ -95,7 +70,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
                              Bundle savedInstanceState) {
         mFeedAdapter = new FeedAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
-        final ListView mFeedList = (ListView) rootView.findViewById(R.id.list_feed);
+        mFeedList = (ListView) rootView.findViewById(R.id.list_feed);
         mFeedList.setAdapter(mFeedAdapter);
         mFeedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -105,9 +80,14 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
                 String url = cursor.getString(COL_LINK);
                 ((Callback) getActivity())
                         .onItemSelected(url);
+                mPosition = position;
             }
         });
-        setRecurringAlarm(getActivity());
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
         return rootView;
     }
 
@@ -115,6 +95,16 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         getLoaderManager().initLoader(FEED_LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -136,6 +126,11 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mFeedAdapter.swapCursor(data);
+        if (mPosition != ListView.INVALID_POSITION) {
+            // If we don't need to restart the loader, and there's a desired position to restore
+            // to, do so now.
+            mFeedList.smoothScrollToPosition(mPosition);
+        }
     }
 
     @Override

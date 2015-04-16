@@ -1,11 +1,6 @@
-package com.grishman.rssfeed.service;
+package com.grishman.rssfeed.sync;
 
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
 import android.util.Log;
-
-import com.grishman.rssfeed.data.RSSFeedContract;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -67,7 +62,6 @@ public class RSSHandler extends DefaultHandler {
         if (localName.equalsIgnoreCase("item")) {
 
             articleList.add(currentArticle);
-
 
             currentArticle = new RSSFeedItem();
 

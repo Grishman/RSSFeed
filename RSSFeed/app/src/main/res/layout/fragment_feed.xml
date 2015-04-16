@@ -7,6 +7,7 @@
     tools:context=".MainActivity$PlaceholderFragment">
 
     <ListView
+        style="@style/FeedListStyle"
         android:id="@+id/list_feed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -17,7 +17,6 @@ public class DetailActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
             arguments.putString(DetailWebViewFragment.DETAIL_URL, getIntent().getExtras().getString(DetailWebViewFragment.DETAIL_URL));
-
             DetailWebViewFragment fragment = new DetailWebViewFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
