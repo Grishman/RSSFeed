@@ -33,14 +33,10 @@ public class DetailWebViewFragment extends Fragment {
             mUrl = arguments.getString(DetailWebViewFragment.DETAIL_URL);
         }
         Log.d("URT TO DETAIL", "" + mUrl);
-        Bundle extras = getActivity().getIntent().getExtras();
-        String urlFromIntent = "http://stackoverflow.com/questions/16558357/uncaught-typeerror-when-calling-a-javascript-function-in-android";
-        //if (extras != null) {
-        urlFromIntent = mUrl; //extras.getString("URL");
-        //}
+        // TODO Fix rotation
         myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.setWebViewClient(new FeedWebViewClient());
-        myWebView.loadUrl(urlFromIntent);
+        myWebView.loadUrl(mUrl);
         return rootView;
     }
 
