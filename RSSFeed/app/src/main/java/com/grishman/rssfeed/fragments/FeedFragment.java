@@ -24,6 +24,9 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private static final int FEED_LOADER_ID = 1;
     private FeedAdapter mFeedAdapter = null;
+    private ListView mFeedList;
+    private int mPosition = ListView.INVALID_POSITION;
+    private static final String SELECTED_KEY = "selected_position";
 
     public FeedFragment() {
     }
@@ -67,7 +70,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
                              Bundle savedInstanceState) {
         mFeedAdapter = new FeedAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
-        final ListView mFeedList = (ListView) rootView.findViewById(R.id.list_feed);
+        mFeedList = (ListView) rootView.findViewById(R.id.list_feed);
         mFeedList.setAdapter(mFeedAdapter);
         mFeedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -77,8 +80,14 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
                 String url = cursor.getString(COL_LINK);
                 ((Callback) getActivity())
                         .onItemSelected(url);
+                mPosition = position;
             }
         });
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
         return rootView;
     }
 
@@ -86,6 +95,16 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         getLoaderManager().initLoader(FEED_LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -107,6 +126,11 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mFeedAdapter.swapCursor(data);
+        if (mPosition != ListView.INVALID_POSITION) {
+            // If we don't need to restart the loader, and there's a desired position to restore
+            // to, do so now.
+            mFeedList.smoothScrollToPosition(mPosition);
+        }
     }
 
     @Override
