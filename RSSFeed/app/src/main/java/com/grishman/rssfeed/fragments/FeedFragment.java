@@ -1,5 +1,8 @@
 package com.grishman.rssfeed.fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,18 +11,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.grishman.rssfeed.DetailActivity;
 import com.grishman.rssfeed.FeedAdapter;
 import com.grishman.rssfeed.R;
 import com.grishman.rssfeed.data.RSSFeedContract;
 import com.grishman.rssfeed.service.FeedParserService;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * A Feed fragment containing list view for feed list.
@@ -32,9 +37,30 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     public FeedFragment() {
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    private void setRecurringAlarm(Context context) {
+        Log.d("Alarm", "in the alarm");
+
+        // let's grab new stuff at around 12:45 GMT, inexactly
+        Calendar updateTime = Calendar.getInstance();
+        updateTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+        updateTime.set(Calendar.HOUR_OF_DAY, 10);
+        updateTime.set(Calendar.MINUTE, 40);
+
+        Intent downloader = new Intent(context, FeedParserService.AlarmReceiver.class);
+        PendingIntent recurringDownload = PendingIntent.getBroadcast(context,
+                0, downloader, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarms = (AlarmManager) getActivity().getSystemService(
+                Context.ALARM_SERVICE);
+        alarms.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                updateTime.getTimeInMillis(),
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES, recurringDownload);
     }
 
     private static final String[] FEED_COLUMNS = {
@@ -81,6 +107,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
                         .onItemSelected(url);
             }
         });
+        setRecurringAlarm(getActivity());
         return rootView;
     }
 
@@ -93,7 +120,7 @@ public class FeedFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(FEED_LOADER_ID,null,this);
+        getLoaderManager().restartLoader(FEED_LOADER_ID, null, this);
     }
 
     @Override

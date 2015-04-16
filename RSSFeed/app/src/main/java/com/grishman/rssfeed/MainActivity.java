@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
     protected void onStart() {
         super.onStart();
         // Start schedule alarm to trigger once a day
-        setRecurringAlarm(getApplication().getApplicationContext());
+//        setRecurringAlarm(getApplication().getApplicationContext());
     }
 
     private void fakeData() {
@@ -71,24 +71,24 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
 
     }
 
-    private void setRecurringAlarm(Context context) {
-        Log.d("Alarm", "in the alarm");
-
-        // let's grab new stuff at around 12:45 GMT, inexactly
-        Calendar updateTime = Calendar.getInstance();
-        updateTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        updateTime.set(Calendar.HOUR_OF_DAY, 10);
-        updateTime.set(Calendar.MINUTE, 40);
-
-        Intent downloader = new Intent(context, FeedParserService.AlarmReceiver.class);
-        PendingIntent recurringDownload = PendingIntent.getBroadcast(context,
-                0, downloader, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager alarms = (AlarmManager) getApplicationContext().getSystemService(
-                Context.ALARM_SERVICE);
-        alarms.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                updateTime.getTimeInMillis(),
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, recurringDownload);
-    }
+//    private void setRecurringAlarm(Context context) {
+//        Log.d("Alarm", "in the alarm");
+//
+//        // let's grab new stuff at around 12:45 GMT, inexactly
+//        Calendar updateTime = Calendar.getInstance();
+//        updateTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        updateTime.set(Calendar.HOUR_OF_DAY, 10);
+//        updateTime.set(Calendar.MINUTE, 40);
+//
+//        Intent downloader = new Intent(context, FeedParserService.AlarmReceiver.class);
+//        PendingIntent recurringDownload = PendingIntent.getBroadcast(context,
+//                0, downloader, PendingIntent.FLAG_CANCEL_CURRENT);
+//        AlarmManager alarms = (AlarmManager) getApplicationContext().getSystemService(
+//                Context.ALARM_SERVICE);
+//        alarms.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+//                updateTime.getTimeInMillis(),
+//                AlarmManager.INTERVAL_FIFTEEN_MINUTES, recurringDownload);
+//    }
 
     public boolean isOnline() {
         String cs = Context.CONNECTIVITY_SERVICE;
