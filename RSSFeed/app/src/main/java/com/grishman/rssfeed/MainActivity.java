@@ -48,6 +48,7 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
         } else {
             mTwoPane = false;
         }
+        RSSFeedSyncAdapter.initializeSyncAdapter(getApplicationContext());
     }
 
     @Override

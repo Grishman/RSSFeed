@@ -42,43 +42,7 @@ public class FeedParserService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "Service started");
-        URL url = null;
-        rssHandler = new RSSHandler();
 
-        try {
-
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            SAXParser sp = spf.newSAXParser();
-            XMLReader xr = sp.getXMLReader();
-
-            url = new URL(feedUrl);
-
-            xr.setContentHandler(rssHandler);
-            xr.parse(new InputSource(url.openStream()));
-
-
-        } catch (IOException e) {
-            Log.e("RSS Handler IO", e.getMessage() + " >> " + e.toString());
-        } catch (SAXException e) {
-            Log.e("RSS Handler SAX", e.toString());
-        } catch (ParserConfigurationException e) {
-            Log.e("RSS Handler Parser Config", e.toString());
-        }
-        // Delete feeds
-        getApplicationContext().getContentResolver().delete(RSSFeedContract.FeedsEntry.CONTENT_URI, null, null);
-// TODO refactor this sht
-        // Insert new feeds
-        ContentValues cv = new ContentValues();
-        for (RSSFeedItem item : articleList2 = rssHandler.getArticleList()) {
-            Log.d(TAG, item.getImgLink());
-            cv.put("title", item.getTitle());
-            cv.put("description", item.getDescription());
-            cv.put("link", item.getLink());
-            cv.put("img_url", item.getImgLink());
-            cv.put("category", item.getCategory());
-            cv.put("pub_date", item.getPubDate());
-            getApplicationContext().getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI, cv);
-        }
 
     }
 
