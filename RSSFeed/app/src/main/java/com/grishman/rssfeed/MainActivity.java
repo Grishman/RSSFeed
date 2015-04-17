@@ -1,30 +1,60 @@
 package com.grishman.rssfeed;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+
+import com.grishman.rssfeed.data.RSSFeedContract;
+import com.grishman.rssfeed.fragments.DetailWebViewFragment;
+import com.grishman.rssfeed.fragments.FeedFragment;
+import com.grishman.rssfeed.sync.RSSFeedSyncAdapter;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements FeedFragment.Callback {
+
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
+    private boolean mTwoPane;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
+        if (findViewById(R.id.feeds_detail_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.feeds_detail_container, new DetailWebViewFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
         }
+        RSSFeedSyncAdapter.initializeSyncAdapter(getApplicationContext());
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void deleteAll() {
+        // Helper method for testing
+        getApplicationContext().getContentResolver().delete(RSSFeedContract.FeedsEntry.CONTENT_URI, null, null);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -40,27 +70,41 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.action_refresh) {
+            // Starting the sync
+            RSSFeedSyncAdapter.syncImmediately(this);
+        }
+        if (id == R.id.action_delete) {
+            deleteAll();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
+    @Override
+    public void onItemSelected(String url) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putString(DetailWebViewFragment.DETAIL_URL, url);
 
-        public PlaceholderFragment() {
-        }
+            DetailWebViewFragment fragment = new DetailWebViewFragment();
+            fragment.setArguments(args);
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
-            return rootView;
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.feeds_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            // Open a detailActivity if we use phone
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .putExtra(DetailWebViewFragment.DETAIL_URL, url);
+            startActivity(intent);
         }
     }
+
 }
