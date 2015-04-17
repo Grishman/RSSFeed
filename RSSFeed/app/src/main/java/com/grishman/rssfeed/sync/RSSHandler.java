@@ -26,7 +26,7 @@ public class RSSHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         chars = new StringBuffer();
         if (localName.trim().equals("thumbnail")) {
-//            Log.d("LOGGING RSS XML", "Setting img URL: " + chars.toString());
+            //Get url of the image
             String thumbnail = attributes.getValue("url");
             currentArticle.setImgLink(thumbnail);
             Log.d("LOGGING RSS XML", "Setting img URL: " + currentArticle.getImgLink());
@@ -60,17 +60,8 @@ public class RSSHandler extends DefaultHandler {
 
         // Check if looking for article, and if article is complete
         if (localName.equalsIgnoreCase("item")) {
-
             articleList.add(currentArticle);
-
             currentArticle = new RSSFeedItem();
-
-//            // Lets check if we've hit our limit on number of articles
-//            articlesAdded++;
-//            if (articlesAdded >= ARTICLES_LIMIT)
-//            {
-//                throw new SAXException();
-//            }
         }
     }
 
@@ -78,16 +69,4 @@ public class RSSHandler extends DefaultHandler {
     public void characters(char[] ch, int start, int length) throws SAXException {
         chars.append(new String(ch, start, length));
     }
-//    Context mCont = new Activity().getApplication().getApplicationContext();
-//    public void saveToDB(RSSFeedItem item){
-//        ContentValues cv = new ContentValues();
-////            Log.d(TAG, item.getImgLink());
-//            cv.put("title",item.getTitle());
-//            cv.put("description",item.getDescription());
-//            cv.put("link",item.getLink());
-//            cv.put("img_url",item.getImgLink());
-//            cv.put("category",item.getCategory());
-//            cv.put("pub_date",item.getPubDate());
-//            mCont.getContentResolver().insert(RSSFeedContract.FeedsEntry.CONTENT_URI,cv);
-//    }
 }

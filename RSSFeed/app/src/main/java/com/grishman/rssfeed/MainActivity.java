@@ -42,10 +42,6 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
         } else {
             mTwoPane = false;
         }
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayUseLogoEnabled(true);
-//        getSupportActionBar().setLogo(R.drawable.ic_launcher);
-//        getSupportActionBar().setIcon(R.drawable.ic_launcher);
         RSSFeedSyncAdapter.initializeSyncAdapter(getApplicationContext());
     }
 
@@ -55,21 +51,10 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
     }
 
     private void deleteAll() {
+        // Helper method for testing
         getApplicationContext().getContentResolver().delete(RSSFeedContract.FeedsEntry.CONTENT_URI, null, null);
 
     }
-
-
-    public boolean isOnline() {
-        String cs = Context.CONNECTIVITY_SERVICE;
-        ConnectivityManager cm = (ConnectivityManager)
-                getSystemService(cs);
-        if (cm.getActiveNetworkInfo() == null) {
-            return false;
-        }
-        return cm.getActiveNetworkInfo().isConnectedOrConnecting();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,12 +70,11 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
         if (id == R.id.action_refresh) {
-            // Starting the service
+            // Starting the sync
             RSSFeedSyncAdapter.syncImmediately(this);
         }
         if (id == R.id.action_delete) {
@@ -98,12 +82,6 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        FeedFragment ff = (FeedFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_feeds);
     }
 
     @Override
@@ -122,7 +100,7 @@ public class MainActivity extends ActionBarActivity implements FeedFragment.Call
                     .replace(R.id.feeds_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
         } else {
-            // TODO need fix this sht
+            // Open a detailActivity if we use phone
             Intent intent = new Intent(this, DetailActivity.class)
                     .putExtra(DetailWebViewFragment.DETAIL_URL, url);
             startActivity(intent);

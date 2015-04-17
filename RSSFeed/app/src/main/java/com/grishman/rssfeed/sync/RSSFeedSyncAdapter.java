@@ -195,7 +195,7 @@ public class RSSFeedSyncAdapter extends AbstractThreadedSyncAdapter {
                 new NotificationCompat.Builder(context);
 
         mBuilder.setContentTitle("Get your fresh RSS!");
-        mBuilder.setContentText("Service complete update feed.");
+        mBuilder.setContentText("App complete update feed.");
         mBuilder.setTicker("RSS feed is up to date");
         mBuilder.setSmallIcon(R.drawable.ic_noti_rss);
         mBuilder.setAutoCancel(true);
